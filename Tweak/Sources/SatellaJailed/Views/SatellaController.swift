@@ -23,7 +23,6 @@ final class SatellaController: UIViewController {
         view.frame = CGRect(origin: .zero, size: size)
         
         let tellaVC: UIHostingController = .init(rootView: SatellaView())
-        let tapGest: UITapGestureRecognizer = .init(target: self, action: #selector(handleTap))
         let panGest: UIPanGestureRecognizer = .init(target: self, action: #selector(handlePan))
         
         host = UIView(frame: CGRect(x: geoX, y: geoY, width: 33, height: 33))
@@ -32,7 +31,6 @@ final class SatellaController: UIViewController {
         tellaVC.view.backgroundColor = .clear
         host.backgroundColor = .clear
         
-        host.addGestureRecognizer(tapGest)
         host.addGestureRecognizer(panGest)
         
         host.addSubview(tellaVC.view)
