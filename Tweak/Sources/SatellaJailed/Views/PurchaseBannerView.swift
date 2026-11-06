@@ -55,36 +55,34 @@ struct PurchaseBannerView: View {
         VStack(spacing: 0) {
             header
 
-            divider.padding(.top, 17).padding(.bottom, 17)
+            divider.padding(.top, 12).padding(.bottom, 12)
 
             // Keep the grey selection card limited to product, price and account.
             detailsHighlight
 
-            // Place the blue symbol and its explanatory text below the grey card,
-            // near the bottom of the outer panel.
-            sideButtonPrompt
-                .padding(.top, 22)
-
-            // Compact, persistent disclosure: this is a visual mock-up,
-            // not Apple's payment authorization interface.
+            // Keep the disclosure visible, but place the blue cue last so it
+            // sits at the bottom of the outer panel, outside the product card.
             Text(" ")
                 .font(.system(size: 8, weight: .semibold, design: .rounded))
                 .tracking(0.9)
                 .foregroundColor(.white.opacity(0.46))
                 .multilineTextAlignment(.center)
-                .padding(.top, 22)
+                .padding(.top, 10)
+
+            sideButtonPrompt
+                .padding(.top, 10)
         }
         .padding(.horizontal, 22)
-        .padding(.top, 17)
-        .padding(.bottom, 20)
+        .padding(.top, 13)
+        .padding(.bottom, 14)
         .frame(maxWidth: 500)
         .background {
             RoundedRectangle(cornerRadius: 36, style: .continuous)
                 .fill(.ultraThinMaterial)
-                .opacity(0.90) // 30% higher than the previous 0.69 material opacity
+                .opacity(0.99) // increase outer material opacity by 10 percentage points
                 .overlay {
                     RoundedRectangle(cornerRadius: 36, style: .continuous)
-                        .fill(Color(red: 0.001, green: 0.002, blue: 0.004).opacity(0.52))
+                        .fill(Color(red: 0.001, green: 0.002, blue: 0.004).opacity(0.58))
                 }
                 .overlay {
                     RoundedRectangle(cornerRadius: 36, style: .continuous)
@@ -107,12 +105,17 @@ struct PurchaseBannerView: View {
     }
 
     private var header: some View {
-        HStack(spacing: 8) {
+        HStack(spacing: 7) {
+            Image(systemName: "apple.logo")
+                .font(.system(size: 17, weight: .medium))
+                .foregroundColor(.white.opacity(0.96))
+                .accessibilityHidden(true)
+
             Text("In-App Purchase")
-                .font(.system(size: 18, weight: .semibold, design: .rounded))
+                .font(.system(size: 17, weight: .semibold, design: .rounded))
                 .foregroundColor(primaryText)
                 .lineLimit(1)
-                .minimumScaleFactor(0.82)
+                .minimumScaleFactor(0.76)
 
             Spacer(minLength: 4)
 
@@ -132,13 +135,13 @@ struct PurchaseBannerView: View {
     private var detailsHighlight: some View {
         VStack(spacing: 0) {
             productRow
-            divider.padding(.vertical, 15)
+            divider.padding(.vertical, 12)
             priceRow
-            divider.padding(.vertical, 14)
+            divider.padding(.vertical, 11)
             accountRow
         }
         .padding(.horizontal, 13)
-        .padding(.vertical, 13)
+        .padding(.vertical, 11)
         .background {
             RoundedRectangle(cornerRadius: 20, style: .continuous)
                 .fill(Color(red: 0.19, green: 0.19, blue: 0.20).opacity(0.985))
@@ -265,15 +268,15 @@ struct PurchaseBannerView: View {
                 .shadow(color: blue.opacity(pulse ? 0.20 : 0.08), radius: pulse ? 7 : 3)
             }
             // Blue visual cue, kept separate from the grey product card.
-            .frame(width: 45.1, height: 45.1)
+            .frame(width: 42, height: 42)
 
             Text("Визуальная подсказка боковой кнопки")
-                .font(.system(size: 14, weight: .medium))
+                .font(.system(size: 13, weight: .medium))
                 .foregroundColor(.white.opacity(0.93))
                 .multilineTextAlignment(.center)
 
-            Text("Не запускает системное подтверждение или оплату")
-                .font(.system(size: 9, weight: .regular))
+            Text(" ")
+                .font(.system(size: 8, weight: .regular))
                 .foregroundColor(.white.opacity(0.58))
                 .multilineTextAlignment(.center)
         }
