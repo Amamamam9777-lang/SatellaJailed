@@ -58,12 +58,9 @@ struct PurchaseBannerView: View {
 
             divider.padding(.top, 17).padding(.bottom, 17)
 
-            // Subtle grey selection-style surface spanning the product,
-            // price and account details, as requested.
+            // One continuous grey information panel now extends downward
+            // to include the side-button illustration and its explanatory text.
             detailsHighlight
-
-            sideButtonPrompt
-                .padding(.top, 24)
 
             // Compact, persistent disclosure: this is a visual mock-up,
             // not Apple's payment authorization interface.
@@ -81,10 +78,10 @@ struct PurchaseBannerView: View {
         .background {
             RoundedRectangle(cornerRadius: 36, style: .continuous)
                 .fill(.ultraThinMaterial)
-                .opacity(0.55)
+                .opacity(0.69)
                 .overlay {
                     RoundedRectangle(cornerRadius: 36, style: .continuous)
-                        .fill(Color(red: 0.003, green: 0.004, blue: 0.007).opacity(0.40))
+                        .fill(Color(red: 0.002, green: 0.003, blue: 0.006).opacity(0.47))
                 }
                 .overlay {
                     RoundedRectangle(cornerRadius: 36, style: .continuous)
@@ -92,7 +89,7 @@ struct PurchaseBannerView: View {
                             colors: [
                                 Color.white.opacity(0.025),
                                 Color.white.opacity(0.008),
-                                Color.black.opacity(0.19)
+                                Color.black.opacity(0.23)
                             ],
                             startPoint: .topLeading,
                             endPoint: .bottomTrailing
@@ -136,12 +133,19 @@ struct PurchaseBannerView: View {
             priceRow
             divider.padding(.vertical, 14)
             accountRow
+
+            // Extend the selected grey surface downward so the icon and
+            // explanatory line sit at the bottom of the same highlighted card.
+            sideButtonPrompt
+                .padding(.top, 24)
+                .padding(.bottom, 5)
         }
         .padding(.horizontal, 13)
-        .padding(.vertical, 13)
+        .padding(.top, 13)
+        .padding(.bottom, 19)
         .background {
             RoundedRectangle(cornerRadius: 20, style: .continuous)
-                .fill(Color(red: 0.19, green: 0.19, blue: 0.20).opacity(0.96))
+                .fill(Color(red: 0.19, green: 0.19, blue: 0.20).opacity(0.985))
                 .overlay {
                     RoundedRectangle(cornerRadius: 20, style: .continuous)
                         .strokeBorder(Color.white.opacity(0.085), lineWidth: 0.8)
@@ -216,7 +220,7 @@ struct PurchaseBannerView: View {
         HStack(spacing: 5) {
             Text("Аккаунт:")
                 .foregroundColor(secondaryText)
-            Text(verbatim: " OBXOD ")
+            Text(verbatim: "obxod@apple.com")
                 .foregroundColor(secondaryText)
                 .lineLimit(1)
                 .minimumScaleFactor(0.75)
@@ -227,24 +231,45 @@ struct PurchaseBannerView: View {
 
 
     private var sideButtonPrompt: some View {
-        VStack(spacing: 10) {
-            ZStack {
-                Circle()
-                    .stroke(Color(red: 0.10, green: 0.52, blue: 0.96).opacity(pulse ? 0.72 : 1.0), lineWidth: 2.2)
-                    .frame(width: 48, height: 48)
-                    .scaleEffect(pulse ? 1.035 : 0.985)
+        VStack(spacing: 9) {
+            GeometryReader { proxy in
+                let side = min(proxy.size.width, proxy.size.height)
+                let centerX = proxy.size.width / 2
+                let centerY = proxy.size.height / 2
+                let blue = Color(red: 0.10, green: 0.52, blue: 0.96)
 
-                Image(systemName: "arrow.left")
-                    .font(.system(size: 19, weight: .medium))
-                    .foregroundColor(Color(red: 0.18, green: 0.58, blue: 1.0))
-                    .offset(x: -2)
+                ZStack {
+                    Circle()
+                        .stroke(blue.opacity(pulse ? 0.95 : 0.78), lineWidth: 2.0)
+                        .scaleEffect(pulse ? 1.012 : 0.992)
 
-                Capsule()
-                    .fill(Color(red: 0.18, green: 0.58, blue: 1.0))
-                    .frame(width: 2.2, height: 16)
-                    .offset(x: 10)
+                    // Custom-drawn side-button glyph based on the reference:
+                    // a short device-edge mark and a left-pointing arrow.
+                    Path { path in
+                        let edgeX = centerX - side * 0.075
+                        let topY = centerY - side * 0.30
+                        let bottomY = centerY + side * 0.30
+
+                        path.move(to: CGPoint(x: edgeX, y: topY))
+                        path.addLine(to: CGPoint(x: edgeX, y: bottomY))
+                        path.move(to: CGPoint(x: edgeX, y: topY))
+                        path.addLine(to: CGPoint(x: centerX - side * 0.31, y: topY))
+
+                        let arrowStart = CGPoint(x: centerX + side * 0.30, y: centerY)
+                        let arrowTip = CGPoint(x: centerX + side * 0.055, y: centerY)
+                        path.move(to: arrowStart)
+                        path.addLine(to: arrowTip)
+                        path.move(to: arrowTip)
+                        path.addLine(to: CGPoint(x: centerX + side * 0.16, y: centerY - side * 0.105))
+                        path.move(to: arrowTip)
+                        path.addLine(to: CGPoint(x: centerX + side * 0.16, y: centerY + side * 0.105))
+                    }
+                    .stroke(blue, style: StrokeStyle(lineWidth: 1.65, lineCap: .round, lineJoin: .round))
+                }
+                .shadow(color: blue.opacity(pulse ? 0.20 : 0.08), radius: pulse ? 7 : 3)
             }
-            .shadow(color: Color.blue.opacity(pulse ? 0.22 : 0.08), radius: pulse ? 8 : 3)
+            // 48 pt reference size reduced by approximately 6%.
+            .frame(width: 45.1, height: 45.1)
 
             Text("Подтвердите боковой кнопкой")
                 .font(.system(size: 14, weight: .medium))
