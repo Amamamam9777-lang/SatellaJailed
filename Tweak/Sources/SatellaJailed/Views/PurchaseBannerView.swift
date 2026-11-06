@@ -38,6 +38,7 @@ struct PurchaseBannerView: View {
                 .opacity(isPresented ? 1 : 0)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .background(Color.clear.ignoresSafeArea())
         .preferredColorScheme(.dark)
         .onAppear {
             withAnimation(.spring(response: 0.48, dampingFraction: 0.88)) {
@@ -82,7 +83,7 @@ struct PurchaseBannerView: View {
                 // noticeably more transparent while retaining contrast.
                 .overlay {
                     RoundedRectangle(cornerRadius: 36, style: .continuous)
-                        .fill(Color(red: 0.018, green: 0.020, blue: 0.024).opacity(0.42))
+                        .fill(Color(red: 0.018, green: 0.020, blue: 0.024).opacity(0.25))
                 }
                 .overlay {
                     RoundedRectangle(cornerRadius: 36, style: .continuous)
@@ -90,7 +91,7 @@ struct PurchaseBannerView: View {
                             colors: [
                                 Color.white.opacity(0.065),
                                 Color.white.opacity(0.018),
-                                Color.black.opacity(0.15)
+                                Color.black.opacity(0.10)
                             ],
                             startPoint: .topLeading,
                             endPoint: .bottomTrailing
@@ -223,7 +224,7 @@ struct PurchaseBannerView: View {
             Text("Аккаунт:")
                 .foregroundColor(secondaryText)
             Text("preview@example.com")
-                .foregroundColor(Color(red: 0.38, green: 0.65, blue: 1.0))
+                .foregroundColor(secondaryText)
                 .lineLimit(1)
                 .minimumScaleFactor(0.75)
         }

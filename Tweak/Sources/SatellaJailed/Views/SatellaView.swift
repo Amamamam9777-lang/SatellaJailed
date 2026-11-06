@@ -25,25 +25,24 @@ struct SatellaView: View {
         }
         .buttonStyle(.plain)
         .frame(width: 33, height: 33)
-        .sheet(isPresented: $model.isShowing) {
+        .fullScreenCover(isPresented: $model.isShowing) {
             PurchaseBannerView(isShowing: $model.isShowing)
                 .preferredColorScheme(.dark)
-                .modifier(DemoSheetPresentation())
+                .background(Color.clear.ignoresSafeArea())
+                .modifier(TransparentPreviewPresentation())
         }
     }
 }
 
+/// Makes the full-screen presentation transparent so SwiftUI does not draw
+/// the extra dark rounded sheet container behind the custom glass card.
 @available(iOS 15, *)
-private struct DemoSheetPresentation: ViewModifier {
+private struct TransparentPreviewPresentation: ViewModifier {
     func body(content: Content) -> some View {
         if #available(iOS 16.4, *) {
-            content
-                .presentationDetents([.height(470)])
-                .presentationDragIndicator(.hidden)
-                .presentationBackground(.clear)
-                .presentationCornerRadius(36)
+            content.presentationBackground(.clear)
         } else {
-            content
+            content.background(Color.clear.ignoresSafeArea())
         }
     }
 }
