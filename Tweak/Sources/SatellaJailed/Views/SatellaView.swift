@@ -33,16 +33,15 @@ struct SatellaView: View {
     }
 }
 
-/// Uses APIs available in the original project's iOS 15 deployment range.
-/// On newer iOS versions the system sheet remains transparent so the material
-/// card below reads as a Liquid Glass-inspired surface.
 @available(iOS 15, *)
 private struct DemoSheetPresentation: ViewModifier {
     func body(content: Content) -> some View {
         if #available(iOS 16.4, *) {
             content
-                .presentationDetents([.height(430)])
+                .presentationDetents([.height(470)])
                 .presentationDragIndicator(.hidden)
+                .presentationBackground(.clear)
+                .presentationCornerRadius(36)
         } else {
             content
         }
