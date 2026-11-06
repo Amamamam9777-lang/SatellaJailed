@@ -33,7 +33,6 @@ struct PurchaseBannerView: View {
                 .padding(.horizontal, 12)
                 .padding(.bottom, 8)
                 .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
-                .scaleEffect(x: 1, y: 1.05, anchor: .bottom)
                 .offset(y: isPresented ? 0 : 34)
                 .scaleEffect(isPresented ? 1 : 0.965, anchor: .bottom)
                 .blur(radius: isPresented ? 0 : 7)
@@ -58,9 +57,13 @@ struct PurchaseBannerView: View {
 
             divider.padding(.top, 17).padding(.bottom, 17)
 
-            // One continuous grey information panel now extends downward
-            // to include the side-button illustration and its explanatory text.
+            // Keep the grey selection card limited to product, price and account.
             detailsHighlight
+
+            // Place the blue symbol and its explanatory text below the grey card,
+            // near the bottom of the outer panel.
+            sideButtonPrompt
+                .padding(.top, 22)
 
             // Compact, persistent disclosure: this is a visual mock-up,
             // not Apple's payment authorization interface.
@@ -78,10 +81,10 @@ struct PurchaseBannerView: View {
         .background {
             RoundedRectangle(cornerRadius: 36, style: .continuous)
                 .fill(.ultraThinMaterial)
-                .opacity(0.69)
+                .opacity(0.90) // 30% higher than the previous 0.69 material opacity
                 .overlay {
                     RoundedRectangle(cornerRadius: 36, style: .continuous)
-                        .fill(Color(red: 0.002, green: 0.003, blue: 0.006).opacity(0.47))
+                        .fill(Color(red: 0.001, green: 0.002, blue: 0.004).opacity(0.52))
                 }
                 .overlay {
                     RoundedRectangle(cornerRadius: 36, style: .continuous)
@@ -133,16 +136,9 @@ struct PurchaseBannerView: View {
             priceRow
             divider.padding(.vertical, 14)
             accountRow
-
-            // Extend the selected grey surface downward so the icon and
-            // explanatory line sit at the bottom of the same highlighted card.
-            sideButtonPrompt
-                .padding(.top, 24)
-                .padding(.bottom, 5)
         }
         .padding(.horizontal, 13)
-        .padding(.top, 13)
-        .padding(.bottom, 19)
+        .padding(.vertical, 13)
         .background {
             RoundedRectangle(cornerRadius: 20, style: .continuous)
                 .fill(Color(red: 0.19, green: 0.19, blue: 0.20).opacity(0.985))
@@ -220,8 +216,8 @@ struct PurchaseBannerView: View {
         HStack(spacing: 5) {
             Text("Аккаунт:")
                 .foregroundColor(secondaryText)
-            Text(verbatim: "obxod@apple.com")
-                .foregroundColor(secondaryText)
+            Text(verbatim: "obxod47@apple.com")
+                .foregroundColor(Color.white.opacity(0.64))
                 .lineLimit(1)
                 .minimumScaleFactor(0.75)
         }
@@ -268,15 +264,15 @@ struct PurchaseBannerView: View {
                 }
                 .shadow(color: blue.opacity(pulse ? 0.20 : 0.08), radius: pulse ? 7 : 3)
             }
-            // 48 pt reference size reduced by approximately 6%.
+            // Blue visual cue, kept separate from the grey product card.
             .frame(width: 45.1, height: 45.1)
 
-            Text("Подтвердите боковой кнопкой")
+            Text("Визуальная подсказка боковой кнопки")
                 .font(.system(size: 14, weight: .medium))
                 .foregroundColor(.white.opacity(0.93))
                 .multilineTextAlignment(.center)
 
-            Text(" ")
+            Text("Не запускает системное подтверждение или оплату")
                 .font(.system(size: 9, weight: .regular))
                 .foregroundColor(.white.opacity(0.58))
                 .multilineTextAlignment(.center)
