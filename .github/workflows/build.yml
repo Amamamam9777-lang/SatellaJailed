@@ -1,0 +1,82 @@
+name: Build Satella UI-only dylib
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'Tweak/Sources/SatellaJailed/**'
+      - 'Tweak/Sources/load.s'
+      - '.github/workflows/build.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: macos-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Check Xcode and iOS SDK
+        shell: bash
+        run: |
+          set -euo pipefail
+          xcodebuild -version
+          SDKROOT="$(xcrun --sdk iphoneos --show-sdk-path)"
+          SDK_VERSION="$(xcrun --sdk iphoneos --show-sdk-version)"
+          echo "iOS SDK: ${SDK_VERSION}"
+          if [[ "$(printf '%s\n' 26.0 "$SDK_VERSION" | sort -V | head -n1)" != "26.0" ]]; then
+            echo "This workflow requires an iOS 26.0 SDK or newer; runner has ${SDK_VERSION}."
+            exit 1
+          fi
+          echo "SDKROOT=${SDKROOT}" >> "$GITHUB_ENV"
+
+      - name: Compile UI-only dynamic library
+        shell: bash
+        run: |
+          set -euo pipefail
+          BUILD_DIR="$RUNNER_TEMP/satella-build"
+          OUT_DIR="$GITHUB_WORKSPACE/build"
+          mkdir -p "$BUILD_DIR" "$OUT_DIR"
+
+          # Compile only the UI allowlist. StoreKit, receipt, transaction,
+          # payment and other hook source files are deliberately not included.
+          xcrun --sdk iphoneos clang \
+            -target arm64-apple-ios26.0 \
+            -c Tweak/Sources/load.s \
+            -o "$BUILD_DIR/load.o"
+
+          xcrun swiftc \
+            -swift-version 5 \
+            -parse-as-library \
+            -emit-library \
+            -module-name SatellaJailed \
+            -target arm64-apple-ios26.0 \
+            -sdk "$SDKROOT" \
+            Tweak/Sources/SatellaJailed/Tweak.swift \
+            Tweak/Sources/SatellaJailed/Extensions/UIViewController.swift \
+            Tweak/Sources/SatellaJailed/Views/PassthroughView.swift \
+            Tweak/Sources/SatellaJailed/Views/SatellaShape.swift \
+            Tweak/Sources/SatellaJailed/Views/SatellaModel.swift \
+            Tweak/Sources/SatellaJailed/Views/SatellaController.swift \
+            Tweak/Sources/SatellaJailed/Views/SatellaView.swift \
+            Tweak/Sources/SatellaJailed/Views/PurchaseBannerView.swift \
+            "$BUILD_DIR/load.o" \
+            -framework UIKit \
+            -framework SwiftUI \
+            -framework Combine \
+            -Xlinker -install_name \
+            -Xlinker '@rpath/SatellaJailed.dylib' \
+            -o "$OUT_DIR/SatellaJailed.dylib"
+
+          file "$OUT_DIR/SatellaJailed.dylib"
+          xcrun --sdk iphoneos otool -l "$OUT_DIR/SatellaJailed.dylib" | grep -A3 LC_BUILD_VERSION || true
+
+      - name: Upload dylib artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: Satella-UI-only-iOS26-arm64
+          path: build/SatellaJailed.dylib
+          if-no-files-found: error
+          retention-days: 14
