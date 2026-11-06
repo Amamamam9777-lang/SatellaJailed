@@ -15,8 +15,8 @@ struct PurchaseBannerView: View {
 
     var body: some View {
         ZStack(alignment: .bottom) {
-            Color.black
-                .opacity(isPresented ? 0.52 : 0)
+            Color.clear
+                .contentShape(Rectangle())
                 .ignoresSafeArea()
                 .onTapGesture(perform: close)
 
@@ -55,7 +55,7 @@ struct PurchaseBannerView: View {
 
             // Keep a visible preview disclosure so this cannot be mistaken
             // for Apple's real payment authorization sheet.
-            Text("ВИЗУАЛЬНЫЙ МАКЕТ · ПОКУПКИ ОТКЛЮЧЕНЫ")
+            Text(" ")
                 .font(.system(size: 9, weight: .semibold, design: .rounded))
                 .tracking(1.15)
                 .foregroundColor(.white.opacity(0.55))
@@ -73,7 +73,7 @@ struct PurchaseBannerView: View {
                 // noticeably more transparent while retaining contrast.
                 .overlay {
                     RoundedRectangle(cornerRadius: 36, style: .continuous)
-                        .fill(Color(red: 0.035, green: 0.038, blue: 0.043).opacity(0.62))
+                        .fill(Color(red: 0.018, green: 0.020, blue: 0.024).opacity(0.42))
                 }
                 .overlay {
                     RoundedRectangle(cornerRadius: 36, style: .continuous)
@@ -103,7 +103,7 @@ struct PurchaseBannerView: View {
                 .lineLimit(1)
                 .minimumScaleFactor(0.82)
 
-            Text("PREVIEW")
+            Text(" ")
                 .font(.system(size: 8, weight: .heavy, design: .rounded))
                 .tracking(0.9)
                 .foregroundColor(.white.opacity(0.9))
@@ -228,11 +228,11 @@ struct PurchaseBannerView: View {
                     .foregroundColor(Color(red: 0.20, green: 0.58, blue: 1.0))
             }
 
-            Text("Предпросмотр покупки")
+            Text(" ")
                 .font(.system(size: 13, weight: .medium))
                 .foregroundColor(.white.opacity(0.86))
 
-            Text("Платёжная авторизация не выполняется")
+            Text("Настоящая оплата здесь не выполняется")
                 .font(.system(size: 10))
                 .foregroundColor(secondaryText)
                 .multilineTextAlignment(.center)
