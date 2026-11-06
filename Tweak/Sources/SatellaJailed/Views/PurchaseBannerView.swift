@@ -33,15 +33,16 @@ struct PurchaseBannerView: View {
                 .padding(.horizontal, 12)
                 .padding(.bottom, 8)
                 .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
-                .offset(y: isPresented ? 0 : 28)
-                .scaleEffect(isPresented ? 1 : 0.975, anchor: .bottom)
+                .offset(y: isPresented ? 0 : 34)
+                .scaleEffect(isPresented ? 1 : 0.965, anchor: .bottom)
+                .blur(radius: isPresented ? 0 : 7)
                 .opacity(isPresented ? 1 : 0)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(Color.clear.ignoresSafeArea())
         .preferredColorScheme(.dark)
         .onAppear {
-            withAnimation(.spring(response: 0.48, dampingFraction: 0.88)) {
+            withAnimation(.spring(response: 0.58, dampingFraction: 0.86)) {
                 isPresented = true
             }
             withAnimation(.easeInOut(duration: 1.15).repeatForever(autoreverses: true)) {
@@ -60,17 +61,14 @@ struct PurchaseBannerView: View {
             // price and account details, as requested.
             detailsHighlight
 
-            previewConfirmation
-                .padding(.top, 22)
-
-            // Keep a visible preview disclosure so this cannot be mistaken
-            // for Apple's real payment authorization sheet.
-            Text("ВИЗУАЛЬНЫЙ МАКЕТ · ОПЛАТА НЕ ПРОИЗВОДИТСЯ")
+            // Compact, persistent disclosure: this is a visual mock-up,
+            // not Apple's payment authorization interface.
+            Text("ДЕМО · ПЛАТЁЖИ НЕ ОБРАБАТЫВАЮТСЯ")
                 .font(.system(size: 8, weight: .semibold, design: .rounded))
-                .tracking(1.0)
-                .foregroundColor(.white.opacity(0.48))
+                .tracking(0.9)
+                .foregroundColor(.white.opacity(0.46))
                 .multilineTextAlignment(.center)
-                .padding(.top, 17)
+                .padding(.top, 22)
         }
         .padding(.horizontal, 22)
         .padding(.top, 17)
@@ -79,19 +77,18 @@ struct PurchaseBannerView: View {
         .background {
             RoundedRectangle(cornerRadius: 36, style: .continuous)
                 .fill(.ultraThinMaterial)
-                // 0.62 instead of the previous 0.77 makes the panel
-                // noticeably more transparent while retaining contrast.
+                .opacity(0.72)
                 .overlay {
                     RoundedRectangle(cornerRadius: 36, style: .continuous)
-                        .fill(Color(red: 0.018, green: 0.020, blue: 0.024).opacity(0.25))
+                        .fill(Color(red: 0.006, green: 0.008, blue: 0.012).opacity(0.34))
                 }
                 .overlay {
                     RoundedRectangle(cornerRadius: 36, style: .continuous)
                         .fill(LinearGradient(
                             colors: [
-                                Color.white.opacity(0.065),
-                                Color.white.opacity(0.018),
-                                Color.black.opacity(0.10)
+                                Color.white.opacity(0.035),
+                                Color.white.opacity(0.010),
+                                Color.black.opacity(0.16)
                             ],
                             startPoint: .topLeading,
                             endPoint: .bottomTrailing
@@ -99,7 +96,7 @@ struct PurchaseBannerView: View {
                 }
                 .overlay {
                     RoundedRectangle(cornerRadius: 36, style: .continuous)
-                        .strokeBorder(Color.white.opacity(0.15), lineWidth: 1)
+                        .strokeBorder(Color.white.opacity(0.11), lineWidth: 1)
                 }
                 .shadow(color: .black.opacity(0.40), radius: 30, x: 0, y: 14)
         }
@@ -112,14 +109,6 @@ struct PurchaseBannerView: View {
                 .foregroundColor(primaryText)
                 .lineLimit(1)
                 .minimumScaleFactor(0.82)
-
-            Text("ПРЕДПРОСМОТР")
-                .font(.system(size: 7, weight: .heavy, design: .rounded))
-                .tracking(0.8)
-                .foregroundColor(.white.opacity(0.82))
-                .padding(.horizontal, 8)
-                .padding(.vertical, 4)
-                .background(Color.white.opacity(0.14), in: Capsule())
 
             Spacer(minLength: 4)
 
@@ -223,8 +212,8 @@ struct PurchaseBannerView: View {
         HStack(spacing: 5) {
             Text("Аккаунт:")
                 .foregroundColor(secondaryText)
-            Text("preview@example.com")
-                .foregroundColor(secondaryText)
+            Text(verbatim: "preview@example.com")
+                .foregroundStyle(Color.white.opacity(0.64))
                 .lineLimit(1)
                 .minimumScaleFactor(0.75)
         }
@@ -232,39 +221,15 @@ struct PurchaseBannerView: View {
         .frame(maxWidth: .infinity, alignment: .leading)
     }
 
-    private var previewConfirmation: some View {
-        VStack(spacing: 9) {
-            ZStack {
-                Circle()
-                    .stroke(Color.blue.opacity(pulse ? 0.30 : 0.68), lineWidth: 2)
-                    .frame(width: 39, height: 39)
-                    .scaleEffect(pulse ? 1.10 : 0.94)
-                Image(systemName: "checkmark")
-                    .font(.system(size: 17, weight: .semibold))
-                    .foregroundColor(Color(red: 0.20, green: 0.58, blue: 1.0))
-            }
-
-            Text("Предпросмотр покупки")
-                .font(.system(size: 13, weight: .medium))
-                .foregroundColor(.white.opacity(0.86))
-
-            Text("Настоящая оплата здесь не выполняется")
-                .font(.system(size: 10))
-                .foregroundColor(secondaryText)
-                .multilineTextAlignment(.center)
-        }
-        .frame(maxWidth: .infinity)
-    }
-
     private var divider: some View {
         Rectangle().fill(separator).frame(height: 1)
     }
 
     private func close() {
-        withAnimation(.easeOut(duration: 0.20)) {
+        withAnimation(.easeInOut(duration: 0.28)) {
             isPresented = false
         }
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.20) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.28) {
             isShowing = false
         }
     }
