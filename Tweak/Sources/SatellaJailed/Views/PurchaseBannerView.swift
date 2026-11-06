@@ -33,6 +33,7 @@ struct PurchaseBannerView: View {
                 .padding(.horizontal, 12)
                 .padding(.bottom, 8)
                 .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
+                .scaleEffect(x: 1, y: 1.05, anchor: .bottom)
                 .offset(y: isPresented ? 0 : 34)
                 .scaleEffect(isPresented ? 1 : 0.965, anchor: .bottom)
                 .blur(radius: isPresented ? 0 : 7)
@@ -61,9 +62,12 @@ struct PurchaseBannerView: View {
             // price and account details, as requested.
             detailsHighlight
 
+            sideButtonPrompt
+                .padding(.top, 24)
+
             // Compact, persistent disclosure: this is a visual mock-up,
             // not Apple's payment authorization interface.
-            Text("ДЕМО · ПЛАТЁЖИ НЕ ОБРАБАТЫВАЮТСЯ")
+            Text(" ")
                 .font(.system(size: 8, weight: .semibold, design: .rounded))
                 .tracking(0.9)
                 .foregroundColor(.white.opacity(0.46))
@@ -77,18 +81,18 @@ struct PurchaseBannerView: View {
         .background {
             RoundedRectangle(cornerRadius: 36, style: .continuous)
                 .fill(.ultraThinMaterial)
-                .opacity(0.72)
+                .opacity(0.55)
                 .overlay {
                     RoundedRectangle(cornerRadius: 36, style: .continuous)
-                        .fill(Color(red: 0.006, green: 0.008, blue: 0.012).opacity(0.34))
+                        .fill(Color(red: 0.003, green: 0.004, blue: 0.007).opacity(0.40))
                 }
                 .overlay {
                     RoundedRectangle(cornerRadius: 36, style: .continuous)
                         .fill(LinearGradient(
                             colors: [
-                                Color.white.opacity(0.035),
-                                Color.white.opacity(0.010),
-                                Color.black.opacity(0.16)
+                                Color.white.opacity(0.025),
+                                Color.white.opacity(0.008),
+                                Color.black.opacity(0.19)
                             ],
                             startPoint: .topLeading,
                             endPoint: .bottomTrailing
@@ -96,7 +100,7 @@ struct PurchaseBannerView: View {
                 }
                 .overlay {
                     RoundedRectangle(cornerRadius: 36, style: .continuous)
-                        .strokeBorder(Color.white.opacity(0.11), lineWidth: 1)
+                        .strokeBorder(Color.white.opacity(0.095), lineWidth: 1)
                 }
                 .shadow(color: .black.opacity(0.40), radius: 30, x: 0, y: 14)
         }
@@ -137,10 +141,10 @@ struct PurchaseBannerView: View {
         .padding(.vertical, 13)
         .background {
             RoundedRectangle(cornerRadius: 20, style: .continuous)
-                .fill(Color.white.opacity(0.075))
+                .fill(Color(red: 0.19, green: 0.19, blue: 0.20).opacity(0.96))
                 .overlay {
                     RoundedRectangle(cornerRadius: 20, style: .continuous)
-                        .strokeBorder(Color.white.opacity(0.075), lineWidth: 0.8)
+                        .strokeBorder(Color.white.opacity(0.085), lineWidth: 0.8)
                 }
         }
     }
@@ -212,13 +216,48 @@ struct PurchaseBannerView: View {
         HStack(spacing: 5) {
             Text("Аккаунт:")
                 .foregroundColor(secondaryText)
-            Text(verbatim: "preview@example.com")
-                .foregroundStyle(Color.white.opacity(0.64))
+            Text(verbatim: " OBXOD ")
+                .foregroundColor(secondaryText)
                 .lineLimit(1)
                 .minimumScaleFactor(0.75)
         }
         .font(.system(size: 12, weight: .regular))
         .frame(maxWidth: .infinity, alignment: .leading)
+    }
+
+
+    private var sideButtonPrompt: some View {
+        VStack(spacing: 10) {
+            ZStack {
+                Circle()
+                    .stroke(Color(red: 0.10, green: 0.52, blue: 0.96).opacity(pulse ? 0.72 : 1.0), lineWidth: 2.2)
+                    .frame(width: 48, height: 48)
+                    .scaleEffect(pulse ? 1.035 : 0.985)
+
+                Image(systemName: "arrow.left")
+                    .font(.system(size: 19, weight: .medium))
+                    .foregroundColor(Color(red: 0.18, green: 0.58, blue: 1.0))
+                    .offset(x: -2)
+
+                Capsule()
+                    .fill(Color(red: 0.18, green: 0.58, blue: 1.0))
+                    .frame(width: 2.2, height: 16)
+                    .offset(x: 10)
+            }
+            .shadow(color: Color.blue.opacity(pulse ? 0.22 : 0.08), radius: pulse ? 8 : 3)
+
+            Text("Подтвердите боковой кнопкой")
+                .font(.system(size: 14, weight: .medium))
+                .foregroundColor(.white.opacity(0.93))
+                .multilineTextAlignment(.center)
+
+            Text(" ")
+                .font(.system(size: 9, weight: .regular))
+                .foregroundColor(.white.opacity(0.58))
+                .multilineTextAlignment(.center)
+        }
+        .frame(maxWidth: .infinity)
+        .accessibilityElement(children: .combine)
     }
 
     private var divider: some View {
