@@ -79,7 +79,7 @@ struct PurchaseBannerView: View {
         .background {
             RoundedRectangle(cornerRadius: 36, style: .continuous)
                 .fill(.ultraThinMaterial)
-                .opacity(0.99) // increase outer material opacity by 10 percentage points
+                .opacity(0.93) // 6 percentage points more transparent than the previous 0.99 setting
                 .overlay {
                     RoundedRectangle(cornerRadius: 36, style: .continuous)
                         .fill(Color(red: 0.001, green: 0.002, blue: 0.004).opacity(0.58))
@@ -101,6 +101,14 @@ struct PurchaseBannerView: View {
                         .strokeBorder(Color.white.opacity(0.095), lineWidth: 1)
                 }
                 .shadow(color: .black.opacity(0.40), radius: 30, x: 0, y: 14)
+        }
+        // Compact the outer panel vertically by 4%, keeping its bottom edge anchored.
+        .scaleEffect(x: 1.0, y: 0.96, anchor: .bottom)
+        // A distinct demo-only side-edge indicator; it does not imitate a payment action.
+        .overlay(alignment: .topTrailing) {
+            sideEdgeDemoCue
+                .padding(.top, 17)
+                .padding(.trailing, 13)
         }
     }
 
@@ -270,18 +278,45 @@ struct PurchaseBannerView: View {
             // Blue visual cue, kept separate from the grey product card.
             .frame(width: 42, height: 42)
 
-            Text("Визуальная подсказка боковой кнопки")
+            Text("Подтвердите боковой кнопкой")
                 .font(.system(size: 13, weight: .medium))
                 .foregroundColor(.white.opacity(0.93))
                 .multilineTextAlignment(.center)
 
-            Text(" ")
+            Text("Не запускает системное подтверждение или оплату")
                 .font(.system(size: 8, weight: .regular))
                 .foregroundColor(.white.opacity(0.58))
                 .multilineTextAlignment(.center)
         }
         .frame(maxWidth: .infinity)
+        .scaleEffect(0.96, anchor: .center)
         .accessibilityElement(children: .combine)
+    }
+
+    /// Subtle animated cue placed near the upper-right edge of the preview.
+    /// The wording deliberately identifies it as a demo and does not request
+    /// a real side-button press or imply that a payment can be authorized.
+    private var sideEdgeDemoCue: some View {
+        HStack(spacing: 6) {
+            Text(" ")
+                .font(.system(size: 7, weight: .bold, design: .rounded))
+                .tracking(0.55)
+                .foregroundColor(.white.opacity(pulse ? 0.84 : 0.58))
+                .lineLimit(1)
+
+            Capsule(style: .continuous)
+                .fill(Color.white.opacity(pulse ? 0.96 : 0.64))
+                .frame(width: 3, height: 34)
+                .shadow(color: .white.opacity(pulse ? 0.22 : 0.06), radius: pulse ? 4 : 1)
+        }
+        .padding(.leading, 8)
+        .padding(.vertical, 7)
+        .padding(.trailing, 5)
+        .background(Color.white.opacity(pulse ? 0.055 : 0.025), in: Capsule())
+        .offset(x: pulse ? 0 : 2, y: pulse ? 0 : -1)
+        .animation(.easeInOut(duration: 0.9).repeatForever(autoreverses: true), value: pulse)
+        .accessibilityLabel("Нажмите дважды для оплаты")
+        .allowsHitTesting(false)
     }
 
     private var divider: some View {
