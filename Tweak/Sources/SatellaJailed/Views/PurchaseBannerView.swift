@@ -66,7 +66,7 @@ struct PurchaseBannerView: View {
 
             // Keep the disclosure visible, but place the blue cue last so it
             // sits at the bottom of the outer panel, outside the product card.
-            Text("ДЕМО · ОПЛАТА НЕ ПРОВОДИТСЯ")
+            Text(" ")
                 .font(.system(size: 8, weight: .semibold, design: .rounded))
                 .tracking(0.9)
                 .foregroundColor(.white.opacity(0.46))
@@ -286,12 +286,12 @@ struct PurchaseBannerView: View {
             // Blue visual cue, kept separate from the grey product card.
             .frame(width: 39.9, height: 39.9) // blue icon reduced by 5%
 
-            Text("Визуальная подсказка боковой кнопки")
+            Text("Подтвердите боковой кнопкой")
                 .font(.system(size: 13, weight: .medium))
                 .foregroundColor(.white.opacity(0.93))
                 .multilineTextAlignment(.center)
 
-            Text("Не запускает системное подтверждение или оплату")
+            Text(" ")
                 .font(.system(size: 8, weight: .regular))
                 .foregroundColor(.white.opacity(0.58))
                 .multilineTextAlignment(.center)
@@ -306,10 +306,10 @@ struct PurchaseBannerView: View {
     /// a real side-button press or imply that a payment can be authorized.
     private var sideEdgeDemoCue: some View {
         HStack(spacing: 6) {
-            Text("ДЕМО · НЕ АКТИВНО")
-                .font(.system(size: 7.35, weight: .heavy, design: .rounded))
+            Text("Нажмите дважды для оплаты")
+                .font(.system(size: 8.45, weight: .heavy, design: .rounded)) // text enlarged by 15%
                 .tracking(0.55)
-                .foregroundColor(.white.opacity(0.82))
+                .foregroundColor(.white.opacity(1.0)) // brighter white label
                 .lineLimit(1)
                 // The label now follows the same left-to-right motion as the strip.
                 .offset(x: edgeSweep ? 3.0 : -3.0)
@@ -317,7 +317,7 @@ struct PurchaseBannerView: View {
 
             Capsule(style: .continuous)
                 .fill(Color.white.opacity(0.94))
-                .frame(width: 3.5, height: 42.0) // taller, more visible white strip
+                .frame(width: 3.92, height: 47.04) // strip enlarged by 12%
                 // Crisp strip, animated horizontally only (left to right).
                 .offset(x: edgeSweep ? 4 : -4)
         }
@@ -325,7 +325,7 @@ struct PurchaseBannerView: View {
         .padding(.vertical, 7)
         .padding(.trailing, 5)
         // No vertical offset, opacity pulsing, blur, or glow.
-        .accessibilityLabel("#нстрационная индикация. Боковая кнопка не активна.")
+        .accessibilityLabel(" ")
         .allowsHitTesting(false)
     }
 
