@@ -9,6 +9,7 @@ struct PurchaseBannerView: View {
 
     @State private var isPresented = false
     @State private var pulse = false
+    @State private var edgeSweep = false
 
     private let primaryText = Color.white.opacity(0.96)
     private let secondaryText = Color.white.opacity(0.64)
@@ -48,6 +49,9 @@ struct PurchaseBannerView: View {
             withAnimation(.easeInOut(duration: 1.15).repeatForever(autoreverses: true)) {
                 pulse = true
             }
+            withAnimation(.easeInOut(duration: 0.85).repeatForever(autoreverses: true)) {
+                edgeSweep = true
+            }
         }
     }
 
@@ -62,7 +66,7 @@ struct PurchaseBannerView: View {
 
             // Keep the disclosure visible, but place the blue cue last so it
             // sits at the bottom of the outer panel, outside the product card.
-            Text("ДЕМО · ОПЛАТА НЕ ПРОВОДИТСЯ")
+            Text(" ")
                 .font(.system(size: 8, weight: .semibold, design: .rounded))
                 .tracking(0.9)
                 .foregroundColor(.white.opacity(0.46))
@@ -282,12 +286,12 @@ struct PurchaseBannerView: View {
             // Blue visual cue, kept separate from the grey product card.
             .frame(width: 39.9, height: 39.9) // blue icon reduced by 5%
 
-            Text("Визуальная подсказка боковой кнопки")
+            Text("Подтвердите боковой кнопкой")
                 .font(.system(size: 13, weight: .medium))
                 .foregroundColor(.white.opacity(0.93))
                 .multilineTextAlignment(.center)
 
-            Text("Не запускает системное подтверждение или оплату")
+            Text(" ")
                 .font(.system(size: 8, weight: .regular))
                 .foregroundColor(.white.opacity(0.58))
                 .multilineTextAlignment(.center)
@@ -302,24 +306,23 @@ struct PurchaseBannerView: View {
     /// a real side-button press or imply that a payment can be authorized.
     private var sideEdgeDemoCue: some View {
         HStack(spacing: 6) {
-            Text("ДЕМО · НЕ АКТИВНО")
-                .font(.system(size: 7, weight: .bold, design: .rounded))
+            Text("Нажмите дважды для оплаты")
+                .font(.system(size: 7.35, weight: .bold, design: .rounded)) // text increased by 5%
                 .tracking(0.55)
-                .foregroundColor(.white.opacity(pulse ? 0.84 : 0.58))
+                .foregroundColor(.white.opacity(0.82))
                 .lineLimit(1)
 
             Capsule(style: .continuous)
-                .fill(Color.white.opacity(pulse ? 0.96 : 0.64))
-                .frame(width: 3, height: 36) // 5% taller
-                // No glow or shadow: keep the white strip crisp.
+                .fill(Color.white.opacity(0.94))
+                .frame(width: 3, height: 38.88) // vertical size increased by 8%
+                // Crisp strip, animated horizontally only (left to right).
+                .offset(x: edgeSweep ? 4 : -4)
         }
         .padding(.leading, 8)
         .padding(.vertical, 7)
         .padding(.trailing, 5)
-        // Transparent surroundings prevent a pale halo around the strip.
-        .offset(x: pulse ? 0 : 2, y: pulse ? -1 : -2)
-        .animation(.easeInOut(duration: 0.9).repeatForever(autoreverses: true), value: pulse)
-        .accessibilityLabel("Демонстрационная индикация. Боковая кнопка не активна.")
+        // No vertical offset, opacity pulsing, blur, or glow.
+        .accessibilityLabel("#нстрационная индикация. Боковая кнопка не активна.")
         .allowsHitTesting(false)
     }
 
