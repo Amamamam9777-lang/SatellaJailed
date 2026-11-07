@@ -66,7 +66,7 @@ struct PurchaseBannerView: View {
 
             // Keep the disclosure visible, but place the blue cue last so it
             // sits at the bottom of the outer panel, outside the product card.
-            Text(" ")
+            Text("ДЕМО · ОПЛАТА НЕ ПРОВОДИТСЯ")
                 .font(.system(size: 8, weight: .semibold, design: .rounded))
                 .tracking(0.9)
                 .foregroundColor(.white.opacity(0.46))
@@ -286,12 +286,12 @@ struct PurchaseBannerView: View {
             // Blue visual cue, kept separate from the grey product card.
             .frame(width: 39.9, height: 39.9) // blue icon reduced by 5%
 
-            Text("Подтвердите боковой кнопкой")
+            Text("Визуальная подсказка боковой кнопки")
                 .font(.system(size: 13, weight: .medium))
                 .foregroundColor(.white.opacity(0.93))
                 .multilineTextAlignment(.center)
 
-            Text(" ")
+            Text("Не запускает системное подтверждение или оплату")
                 .font(.system(size: 8, weight: .regular))
                 .foregroundColor(.white.opacity(0.58))
                 .multilineTextAlignment(.center)
@@ -306,15 +306,18 @@ struct PurchaseBannerView: View {
     /// a real side-button press or imply that a payment can be authorized.
     private var sideEdgeDemoCue: some View {
         HStack(spacing: 6) {
-            Text("Нажмите дважды для оплаты")
-                .font(.system(size: 7.35, weight: .bold, design: .rounded)) // text increased by 5%
+            Text("ДЕМО · НЕ АКТИВНО")
+                .font(.system(size: 7.35, weight: .heavy, design: .rounded))
                 .tracking(0.55)
                 .foregroundColor(.white.opacity(0.82))
                 .lineLimit(1)
+                // The label now follows the same left-to-right motion as the strip.
+                .offset(x: edgeSweep ? 3.0 : -3.0)
+                .opacity(edgeSweep ? 0.96 : 0.78)
 
             Capsule(style: .continuous)
                 .fill(Color.white.opacity(0.94))
-                .frame(width: 3, height: 38.88) // vertical size increased by 8%
+                .frame(width: 3.5, height: 42.0) // taller, more visible white strip
                 // Crisp strip, animated horizontally only (left to right).
                 .offset(x: edgeSweep ? 4 : -4)
         }
