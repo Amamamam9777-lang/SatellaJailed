@@ -62,7 +62,7 @@ struct PurchaseBannerView: View {
 
             // Keep the disclosure visible, but place the blue cue last so it
             // sits at the bottom of the outer panel, outside the product card.
-            Text(" ")
+            Text("ДЕМО · ОПЛАТА НЕ ПРОВОДИТСЯ")
                 .font(.system(size: 8, weight: .semibold, design: .rounded))
                 .tracking(0.9)
                 .foregroundColor(.white.opacity(0.46))
@@ -107,7 +107,7 @@ struct PurchaseBannerView: View {
         // A distinct demo-only side-edge indicator; it does not imitate a payment action.
         .overlay(alignment: .topTrailing) {
             sideEdgeDemoCue
-                .padding(.top, 17)
+                .padding(.top, 16) // move the side indicator slightly upward
                 .padding(.trailing, 13)
         }
     }
@@ -227,7 +227,7 @@ struct PurchaseBannerView: View {
         HStack(spacing: 5) {
             Text("Аккаунт:")
                 .foregroundColor(secondaryText)
-            Text(verbatim: "obxod47@apple.com")
+            Text(verbatim: "preview@example.com")
                 .foregroundColor(Color.white.opacity(0.64))
                 .lineLimit(1)
                 .minimumScaleFactor(0.75)
@@ -278,7 +278,7 @@ struct PurchaseBannerView: View {
             // Blue visual cue, kept separate from the grey product card.
             .frame(width: 42, height: 42)
 
-            Text("Подтвердите боковой кнопкой")
+            Text("Визуальная подсказка боковой кнопки")
                 .font(.system(size: 13, weight: .medium))
                 .foregroundColor(.white.opacity(0.93))
                 .multilineTextAlignment(.center)
@@ -298,7 +298,7 @@ struct PurchaseBannerView: View {
     /// a real side-button press or imply that a payment can be authorized.
     private var sideEdgeDemoCue: some View {
         HStack(spacing: 6) {
-            Text(" ")
+            Text("ДЕМО · НЕ АКТИВНО")
                 .font(.system(size: 7, weight: .bold, design: .rounded))
                 .tracking(0.55)
                 .foregroundColor(.white.opacity(pulse ? 0.84 : 0.58))
@@ -306,16 +306,16 @@ struct PurchaseBannerView: View {
 
             Capsule(style: .continuous)
                 .fill(Color.white.opacity(pulse ? 0.96 : 0.64))
-                .frame(width: 3, height: 34)
-                .shadow(color: .white.opacity(pulse ? 0.22 : 0.06), radius: pulse ? 4 : 1)
+                .frame(width: 3, height: 36) // 5% taller
+                // No glow or shadow: keep the white strip crisp.
         }
         .padding(.leading, 8)
         .padding(.vertical, 7)
         .padding(.trailing, 5)
-        .background(Color.white.opacity(pulse ? 0.055 : 0.025), in: Capsule())
-        .offset(x: pulse ? 0 : 2, y: pulse ? 0 : -1)
+        // Transparent surroundings prevent a pale halo around the strip.
+        .offset(x: pulse ? 0 : 2, y: pulse ? -1 : -2)
         .animation(.easeInOut(duration: 0.9).repeatForever(autoreverses: true), value: pulse)
-        .accessibilityLabel("Нажмите дважды для оплаты")
+        .accessibilityLabel("Демонстрационная индикация. Боковая кнопка не активна.")
         .allowsHitTesting(false)
     }
 
