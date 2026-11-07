@@ -107,8 +107,12 @@ struct PurchaseBannerView: View {
         // A distinct demo-only side-edge indicator; it does not imitate a payment action.
         .overlay(alignment: .topTrailing) {
             sideEdgeDemoCue
-                .padding(.top, 16) // move the side indicator slightly upward
+                .padding(.top, 16)
                 .padding(.trailing, 13)
+                // Place the cue above and outside the glass panel, rather
+                // than over the panel's surface or its header.
+                .offset(y: -116)
+                .zIndex(10)
         }
     }
 
@@ -276,7 +280,7 @@ struct PurchaseBannerView: View {
                 .shadow(color: blue.opacity(pulse ? 0.20 : 0.08), radius: pulse ? 7 : 3)
             }
             // Blue visual cue, kept separate from the grey product card.
-            .frame(width: 42, height: 42)
+            .frame(width: 39.9, height: 39.9) // blue icon reduced by 5%
 
             Text("Визуальная подсказка боковой кнопки")
                 .font(.system(size: 13, weight: .medium))
