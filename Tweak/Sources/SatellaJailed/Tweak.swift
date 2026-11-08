@@ -5,7 +5,7 @@ import UIKit
 /// anti-cheat, or gameplay hooks.
 @_cdecl("jinx_entry")
 public func jinxEntry() {
-    DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+    DispatchQueue.main.asyncAfter(deadline: .now() + 30.0) {
         guard #available(iOS 15.0, *) else { return }
         SatellaController.installInActiveScenes()
     }
